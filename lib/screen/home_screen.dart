@@ -1,7 +1,6 @@
+import 'package:final_project_cuaca/provider/cuaca_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../provider/cuaca_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,7 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<CuacaProvider>(context, listen: false).showWeatherData(_selectedCity);
+      Provider.of<CuacaProvider>(context, listen: false)
+          .showWeatherData(_selectedCity);
     });
   }
 
@@ -28,12 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
       'Jakarta',
       'Bandung',
       'Bogor',
+      'Cianjur'
+      'Cirebon'
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Aplikasi Cuaca Kelompok 10"),
+        title: const Text("Aplikasi Cuaca Kelompok"),
       ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -41,6 +44,20 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+            const Text(
+              "Kelompok 99",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text('Anggota Kelompok'),
+            const Text('Dhaffa Satria Pratama - Ketua Kelompok'),
+            const Text('Aqil Faqih Github'),
+            const Text('Yulian Dewantara'),
+            const Text('Muhammad Iqbal'),
+
             DropdownButtonFormField<String>(
               value: _selectedCity,
               icon: const Icon(Icons.arrow_drop_down),
@@ -105,7 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    Text("Temp : ${provider.cuacaModel.main?.temp} Celcius"),
+                    Text(
+                        "Temperature kota : ${provider.cuacaModel.main?.temp} Celcius"),
                   ],
                 );
               },
