@@ -1,8 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../model/cuaca_model.dart';
-import '../service/cuaca_service.dart';
+import '../class/cuaca_class.dart';
+import '../services/cuaca_service.dart';
 
 class CuacaProvider extends ChangeNotifier {
   TextEditingController cityNameText = TextEditingController();

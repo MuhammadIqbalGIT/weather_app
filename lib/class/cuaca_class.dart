@@ -7,7 +7,7 @@ class CuacaModel {
   Wind? wind;
   Clouds? clouds;
   int? dt;
-  Sys? sys;
+  Sync? sys;
   int? timezone;
   int? id;
   String? name;
@@ -43,7 +43,7 @@ class CuacaModel {
     clouds =
     json['clouds'] != null ? new Clouds.fromJson(json['clouds']) : null;
     dt = json['dt'];
-    sys = json['sys'] != null ? new Sys.fromJson(json['sys']) : null;
+    sys = json['sys'] != null ? new Sync.fromJson(json['sys']) : null;
     timezone = json['timezone'];
     id = json['id'];
     name = json['name'];
@@ -197,16 +197,16 @@ class Clouds {
   }
 }
 
-class Sys {
+class Sync {
   int? type;
   int? id;
   String? country;
   int? sunrise;
   int? sunset;
 
-  Sys({this.type, this.id, this.country, this.sunrise, this.sunset});
+  Sync({this.type, this.id, this.country, this.sunrise, this.sunset});
 
-  Sys.fromJson(Map<String, dynamic> json) {
+  Sync.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     id = json['id'];
     country = json['country'];
