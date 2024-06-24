@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project_cuaca/provider/cuaca_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../class/cuaca_class.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String _selectedCity = 'Surabaya'; // Default dipilih Jakarta
+  final String _selectedCity = 'Surabaya';
 
   @override
   void initState() {
@@ -28,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan tanggal saat ini
     DateTime now = DateTime.now();
 
     String getMonthName(int month) {
@@ -66,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(0.0), // Hilangkan padding
+          padding: const EdgeInsets.all(0.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -160,11 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 alignment: Alignment.bottomCenter,
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 150),
-                                  // Adjust this value to control overlap
                                   child: cardWeatherToday(
                                       provider.cuacaModel.wind?.speed ?? 0.0,
-                                      provider.cuacaModel.main!.humidity ?? 0,
-                                      provider.cuacaModel.visibility!),
+                                      provider.cuacaModel.main?.humidity ?? 0,
+                                      provider.cuacaModel.visibility??0),
                                 ),
                               ),
                             ],
@@ -182,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Function widget untuk item yang di-looping
   Widget weatherItem(int index, Weather weather) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -228,11 +224,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// Function widget untuk card utama
   Widget cardWeather(List<Weather> weatherList) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topRight: Radius.circular(16.00),topLeft: Radius.circular(16.00),bottomRight: Radius.zero,bottomLeft: Radius.zero)
+        ),
         margin: const EdgeInsets.symmetric(horizontal: 0.0),
         child: SizedBox(
           width: double.infinity,
@@ -243,14 +241,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 80,
                 child: Padding(
                   padding: EdgeInsets.only(top: 10.0),
-                  // Margin top untuk seluruh row
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
                         padding:
                             EdgeInsets.only(left: 10.0, top: 40.0, bottom: 1),
-                        // Combined horizontal and top padding
                         child: Text(
                           'Today',
                           style: TextStyle(
@@ -260,7 +256,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding:
                             EdgeInsets.only(right: 16.0, top: 40, bottom: 1),
-                        // Combined horizontal and top padding
                         child: Text(
                           'Next 7 Day',
                           style: TextStyle(
@@ -275,12 +270,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: weatherList.length,
-                  // Jumlah item berdasarkan panjang weatherList
                   itemBuilder: (context, index) {
                     return weatherItem(
                         index,
                         weatherList[
-                            index]); // Mengirimkan data cuaca ke weatherItem
+                            index]);
                   },
                 ),
               ),
@@ -309,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const Image(
                     image: NetworkImage(
-                        'https://e7.pngegg.com/pngimages/183/597/png-clipart-logo-blue-font-wind-background-white-text.png'),
+                        'https://cdn-icons-png.flaticon.com/512/1247/1247767.png'),
                     width: 50,
                     height: 50,
                   ),
