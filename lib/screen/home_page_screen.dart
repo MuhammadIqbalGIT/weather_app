@@ -200,9 +200,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 50,
                   width: 50,
-                  child: Image.network(
-                    'https://c1.klipartz.com/pngpicture/422/498/sticker-png-cartoon-cloud-weather-forecasting-weather-channel-severe-weather-weather-warning-accuweather-android-yellow-thumbnail.png',
-                    fit: BoxFit.cover,
+                  child: ImageFiltered(
+                    imageFilter:
+                    ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                      "https://openweathermap.org/img/w/${weather.icon ?? ""}.png",
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
