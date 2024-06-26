@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           create: (context) => CuacaProvider(),
         ),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         home: HomeScreen(),
       ),
     );

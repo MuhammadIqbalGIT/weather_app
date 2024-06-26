@@ -10,9 +10,11 @@ class CuacaProvider extends ChangeNotifier {
   CuacaService cuacaService = CuacaService();
   CuacaModel cuacaModel = CuacaModel();
 
-  showWeatherData(String city) async {
-    cuacaModel = await cuacaService.getCurrentWeather(city);
-    print(cuacaModel.weather?.first?.main);
+  showWeatherData(double lat, double lon) async {
+    cuacaModel = await cuacaService.getCurrentWeather(lat,lon);
+    print("$cuacaModel.list?.first?.main");
+    print("cxzczczczc${cuacaModel.list?.first?.main?.temp}");
+
     notifyListeners();
   }
 }

@@ -16,12 +16,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final String _selectedCity = 'Surabaya';
 
+
+  final double lat =-6.200000;
+  final double lon = 106.816666;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CuacaProvider>(context, listen: false)
-          .showWeatherData(_selectedCity);
+          .showWeatherData(lat,lon);
     });
   }
 
@@ -91,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                "${provider.cuacaModel.name ?? ""}, Indonesia",
+                                "${provider.cuacaModel.list ?? ""}, Indonesia",
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.white,
@@ -121,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             end: Alignment.bottomRight,
                           ).createShader(bounds),
                           child: Text(
-                            "${provider.cuacaModel.main?.temp ?? 0}°",
+                            "${provider.cuacaModel.list?.first.main?.temp ?? 0}°",
                             style: const TextStyle(
                               fontSize: 100,
                               color: Colors.white,
@@ -133,15 +137,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 100,
                           child: ImageFiltered(
                             imageFilter:
-                                ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
+                            ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
                             child: CachedNetworkImage(
                               imageUrl:
-                                  "https://openweathermap.org/img/w/${provider.cuacaModel.weather?.first.icon ?? ""}.png",
+                              "https://openweathermap.org/img/w/${provider.cuacaModel.list?.first.weather?.first.icon?? ""}.png",
                               fit: BoxFit.contain,
                               placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
+                              const CircularProgressIndicator(),
                               errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                              const Icon(Icons.error),
                             ),
                           ),
                         ),
@@ -149,19 +153,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Stack(
                             children: [
                               Align(
-                                alignment: Alignment.bottomCenter,
-                                child: cardWeather(
-                                    provider.cuacaModel.weather ??
-                                        List.empty()),
+                                  alignment: Alignment.bottomCenter,
+                                  child: cardWeather(provider.cuacaModel.list??[])
                               ),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 150),
                                   child: cardWeatherToday(
-                                      provider.cuacaModel.wind?.speed ?? 0.0,
-                                      provider.cuacaModel.main?.humidity ?? 0,
-                                      provider.cuacaModel.visibility??0),
+                                      provider.cuacaModel.list?.firstOrNull?.wind?.speed ?? 0.0,
+                                      provider.cuacaModel.list?.first.main?.humidity?? 0,
+                                      provider.cuacaModel.list?.first.visibility??0),
+
+
                                 ),
                               ),
                             ],
@@ -179,67 +183,50 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget weatherItem(int index, Weather weather) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: SizedBox(
-        height: 120,
-        width: 100,
-        child: Card(
-          color: Colors.white,
-          elevation: 3,
-          shadowColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+  Widget weatherItem(int index, WeatherList weatherList) {
+    // Check if the weatherList has any weather items
+    Weather? weather = weatherList.weather?.isNotEmpty ?? false ? weatherList.weather![0] : null;
+
+    return Container(
+      width: 100,
+      margin: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Item $index',
+            style: TextStyle(color: Colors.black),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: ImageFiltered(
-                    imageFilter:
-                    ImageFilter.blur(sigmaX: 0.0, sigmaY: 0.0),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                      "https://openweathermap.org/img/w/${weather.icon ?? ""}.png",
-                      fit: BoxFit.contain,
-                      placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                      const Icon(Icons.error),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  weather.main ?? 'Unknown',
-                  style: const TextStyle(color: Colors.black, fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  weather.description ?? 'No description',
-                  style: const TextStyle(color: Colors.black, fontSize: 10),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          // Display weather details if available
+          if (weather != null) ...[
+            Text(
+              'Main: ${weather.main}',
+              style: TextStyle(color: Colors.black),
             ),
-          ),
-        ),
+            Text(
+              'Description: ${weather.description}',
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ],
       ),
     );
   }
 
-  Widget cardWeather(List<Weather> weatherList) {
+  Widget cardWeather(List<WeatherList> weatherList) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: Card(
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(16.00),topLeft: Radius.circular(16.00),bottomRight: Radius.zero,bottomLeft: Radius.zero)
-        ),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(16.00),
+                topLeft: Radius.circular(16.00),
+                bottomRight: Radius.zero,
+                bottomLeft: Radius.zero)),
         margin: const EdgeInsets.symmetric(horizontal: 0.0),
         child: SizedBox(
           width: double.infinity,
@@ -254,21 +241,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding:
-                            EdgeInsets.only(left: 10.0, top: 40.0, bottom: 1),
+                        padding: EdgeInsets.only(left: 10.0, top: 40.0, bottom: 1),
                         child: Text(
                           'Today',
-                          style: TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.bold),
+                          style:
+                          TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.only(right: 16.0, top: 40, bottom: 1),
+                        EdgeInsets.only(right: 16.0, top: 40, bottom: 1),
                         child: Text(
                           'Next 7 Day',
-                          style: TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.bold),
+                          style:
+                          TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -280,10 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.horizontal,
                   itemCount: weatherList.length,
                   itemBuilder: (context, index) {
-                    return weatherItem(
-                        index,
-                        weatherList[
-                            index]);
+                    return weatherItem(index, weatherList[index]);
                   },
                 ),
               ),
